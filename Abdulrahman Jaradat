@@ -1,0 +1,55 @@
+# This Python 3 environment comes with many helpful analytics libraries installed
+# It is defined by the kaggle/python Docker image: https://github.com/kaggle/docker-python
+# For example, here's several helpful packages to load
+
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+
+# Input data files are available in the read-only "../input/" directory
+# For example, running this (by clicking run or pressing Shift+Enter) will list all files under the input directory
+
+import os
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+        
+        
+import seaborn as sns 
+
+# You can write up to 20GB to the current directory (/kaggle/working/) that gets preserved as output when you create a version using "Save & Run All" 
+# You can also write temporary files to /kaggle/temp/, but they won't be saved outside of the current session
+import matplotlib.pyplot as plt
+df = pd.read_csv('/kaggle/input/tesla-stock-price-2005-2023/Tesla_stock_Price.csv') 
+df.head()
+df_volume = df.sort_values("Volume", ascending = False)
+plt.figure(figsize = (15,7))
+plt.bar(df_volume["Date"].head(20), df_volume["Volume"].head(20), color = "red")
+plt.xticks(rotation = 90)
+plt.xlabel("Date")
+plt.ylabel("Volume")
+plt.legend("Volume")
+plt.title("Highest Volume")
+plt.show()
+df_Chg = df.sort_values("Chg%", ascending = False)
+plt.figure(figsize = (15,7))
+sns.scatterplot(data = df_Chg.head(10), x = "Date", y = "Chg%", size ="Volume" , color = "g")
+plt.title("High Positive Gain")
+plt.xticks(rotation = 90)
+plt.show()
+df.info()
+df.isna().sum()
+df=df.dropna()
+df['Volume']=df['Volume'].apply(lambda x: x.replace('M','')).copy()
+df['Chg%']=df['Chg%'].apply(lambda x: x.replace('%','')).copy()
+df['Low'] = df['Low'].astype(float)
+df['Volume']  = df['Volume'].astype(float)
+df['Chg%']  = df['Chg%'].astype(float)
+df.info()
+plt.subplots(1,1)
+df.Price.plot()
+
+plt.subplots(1,1)
+df.Volume.plot()
+
+
+plt.show()
